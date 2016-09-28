@@ -1,3 +1,6 @@
+#pragma config(Sensor, dgtl1,  ledGreen,       sensorLEDtoVCC)
+#pragma config(Sensor, dgtl2,  ledYellow,      sensorLEDtoVCC)
+#pragma config(Sensor, dgtl3,  ledRed,         sensorLEDtoVCC)
 #pragma config(Motor,  port2,           leftDrive,     tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port3,           rightDrive,    tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port4,           strafeDrive,   tmotorVex393_MC29, openLoop)
@@ -16,6 +19,7 @@
 
 #include "Vex_Competition_Includes.c"   //Main competition background code...do not modify!
 #include "DriverJoyStickControlsStarDestroyer.c" // User Controls For User Controlled Period
+#include "LEDLightTimers.c" // Led Light Timer for User Control Part
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 //                          Pre-Autonomous Functions
@@ -42,10 +46,10 @@ task autonomous()
 
 task usercontrol()
 {
-
-	while (true)
-	{
 	  startTask(controllerPolling);
 	  startTask(driving);
-	}
+	  startTask(lightShow);
+	  while(true){
+	  	delay(500);
+	  }
 }
