@@ -37,12 +37,12 @@ task controllerPolling(){
 				strafeSpeed = 0;
 			}
 		}
-	//	if((vexRT[Ch3Xmtr2] > 20) || (vexRT[Ch3Xmtr2] < - 20)) {
-	//		throwerSpeed = vexRT[Ch3];
-	//	}
-	//	else {
+		if((vexRT[Ch3Xmtr2] > 20) || (vexRT[Ch3Xmtr2] < - 20)) {
+			throwerSpeed = vexRT[Ch3];
+		}
+		else {
 			throwerSpeed = 0;
-	//	}
+		}
 
 		if(vexRT[Btn5U] == 1)
 		{
