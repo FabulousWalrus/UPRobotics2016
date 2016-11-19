@@ -10,8 +10,9 @@ int throwerSpeed = 0;
 task controllerPolling(){
 	while(true){
  		if(vexRT[Btn7U] == 1){
-			// Turn drive train into strafe mode to enable easier access around the field
-			strafeMode = !strafeMode;
+ 			SensorValue[LeftDriver] = 0;
+ 			SensorValue[RightDriver] = 0;
+ 			strafeMode = !strafeMode;
 			delay(300);
 		}
 
@@ -44,7 +45,9 @@ task controllerPolling(){
 			throwerSpeed = 0;
 		}
 
-		if(vexRT[Btn5U] == 1)
+		if(
+			// Turn drive train into strafe mode to enable easier access around the field
+			vexRT[Btn5U] == 1)
 		{
 			throwerSpeed = 127;
 		}

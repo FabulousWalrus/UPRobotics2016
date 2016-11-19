@@ -5,6 +5,7 @@ bool strafeMode = false;
 int strafeSpeed = 0;
 int rightDriveSpeed = 0;
 int leftDriveSpeed = 0;
+int liftSpeed = 0;
 
 // fork has been removed
 // int forkSpeed = 0;
@@ -13,6 +14,8 @@ task controllerPolling(){
 	while(true){
  		if(vexRT[Btn7U] == 1){
 			// Turn drive train into strafe mode to enable easier access around the field
+			SensorValue[LeftDriver] = 0;
+			SensorValue[RightDriver] = 0;
 			strafeMode = !strafeMode;
 			delay(300);
 		}
@@ -63,6 +66,19 @@ task controllerPolling(){
 		{
 			throwerSpeed = -127;
 		}
+
+		if(vexRT[Btn6UXmtr2] == 1)
+		{
+			liftSpeed = 127;
+		}
+		else if(vexRT[Btn6DXmtr2] == 1)
+		{
+			liftSpeed = -127;
+		}
+
+		else {
+			liftSpeed = 0;
+		}
 	//	if(vexRT[Btn6U] == 1)
 	//	{
 	//		forkSpeed = 127;
@@ -80,6 +96,25 @@ task controllerPolling(){
 }
 // Add driver joystick Controls here
 task driving(){
+	// PID Variables
+
+			float pid_Kp = .12;
+			float pid_Ki = .00001;
+			float pid_Kd = 0;
+
+			long currentLeftClicks = 0;
+			int deltaPower = 0;
+
+			float currentError = 0;
+			float sumError = 0;
+
+			long currentRightClicks = 0;
+
+			SensorValue[LeftDriver] = 0;
+			SensorValue[RightDriver] = 0;
+
+			int adjustedRightDriveSpeed = 0;
+			int adjustedLeftDriveSpeed = 0;
 
 	while(true)
 	{
@@ -88,15 +123,37 @@ task driving(){
 			//Right Drive;
 				motor[rightDrive] = rightDriveSpeed;
 				motor[leftDrive] = leftDriveSpeed;
+				motor[liftLeft] = liftSpeed;
+				motor[liftRight] = liftSpeed;
+
+				currentLeftClicks = 0;
+				currentRightClicks = 0;
+				currentError = 0;
+				sumError = 0;
 		}
 //In strafeMode
 		else {
-			//writeDebugStreamLine("***** Drive Loop ******");
-			motor[rightDrive] 	= rightDriveSpeed;
-			motor[leftDrive] 		= leftDriveSpeed;
+
+			currentLeftClicks =  SensorValue[LeftDriver];
+			currentRightClicks =  SensorValue[RightDriver] * -1;
+
+			// get error ( targetSpeed - realSpeed )
+			currentError = currentLeftClicks - currentRightClicks;
+			sumError = sumError + currentError;
+
+
+			// apply new pid Power (set drive variable) (drive speed)
+			deltaPower = ( currentError * pid_Kp ) + (sumError * pid_Ki );
+
+			adjustedLeftDriveSpeed = leftDriveSpeed - deltaPower;
+			adjustedRightDriveSpeed = rightDriveSpeed + deltaPower;
+
+			motor[rightDrive] 	= adjustedRightDriveSpeed;
+			motor[leftDrive] 		= adjustedLeftDriveSpeed;
 			motor[strafeDrive] 	= strafeSpeed;
 		}
 	}
 		delay(5);
 }
+
 // End Driver joystick Controls

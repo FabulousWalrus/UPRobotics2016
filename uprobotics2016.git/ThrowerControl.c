@@ -1,12 +1,6 @@
 
 int throwerSpeed = 0;
 
-
-
-task setThrowerArmDown(){
-
-}
-
 task throwerControl()
 {
 
