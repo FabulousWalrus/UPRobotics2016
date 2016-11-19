@@ -62,6 +62,26 @@ task controllerPolling(){
 // Add driver joystick Controls here
 task driving(){
 
+	// PID Variables
+
+			float pid_Kp = .12;
+			float pid_Ki = .00001;
+			float pid_Kd = 0;
+
+			long currentLeftClicks = 0;
+			int deltaPower = 0;
+
+			float currentError = 0;
+			float sumError = 0;
+
+			long currentRightClicks = 0;
+
+			SensorValue[LeftDriver] = 0;
+			SensorValue[RightDriver] = 0;
+
+			int adjustedRightDriveSpeed = 0;
+			int adjustedLeftDriveSpeed = 0;
+
 	while(true)
 	{
 		motor[leftThrow] = throwerSpeed;
@@ -69,14 +89,33 @@ task driving(){
 		// Tank Drive Mode
 		if(strafeMode == false){
 			//Right Drive;
-				motor[rightDrive] = rightDriveSpeed;
-				motor[leftDrive] = leftDriveSpeed;
+				motor[rightDrive] 	= rightDriveSpeed;
+				motor[leftDrive] 		= leftDriveSpeed;
+				sumError = 0;
 		}
 //In strafeMode
 		else {
+
+			// PID Logic
+
+			currentLeftClicks =  SensorValue[LeftDriver];
+			currentRightClicks =  SensorValue[RightDriver];
+
+			// get error ( targetSpeed - realSpeed )
+			currentError = currentLeftClicks - currentRightClicks;
+			sumError = sumError + currentError;
+
+
+			// apply new pid Power (set drive variable) (drive speed)
+			deltaPower = ( currentError * pid_Kp ) + (sumError * pid_Ki );
+
+			adjustedLeftDriveSpeed = leftDriveSpeed - deltaPower;
+			adjustedRightDriveSpeed = rightDriveSpeed + deltaPower;
+
+
 			//writeDebugStreamLine("***** Drive Loop ******");
-			motor[rightDrive] 	= rightDriveSpeed;
-			motor[leftDrive] 		= leftDriveSpeed;
+			motor[rightDrive] 	= adjustedRightDriveSpeed;
+			motor[leftDrive] 		= adjustedLeftDriveSpeed;
 			motor[strafeDrive] 	= strafeSpeed;
 			motor[strafeFront]  = strafeSpeed;
 		}
