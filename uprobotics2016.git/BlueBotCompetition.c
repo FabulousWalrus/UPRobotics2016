@@ -49,6 +49,18 @@ void pre_auton()
 }
 task autonomous()
 {
+	startTask(driving);
+	startTask(throwerControl);
+	//delay(300);
+	armPosition(-50, 120, 2000);
+	armPosition(80, 80, 2000);
+	driveForward(-130, 127, true);
+	armPosition(450, 127, 3000);
+	//delay(300);
+	//spinClockwise(90, 80, true);
+	//delay(300);
+	//driveForward(30, 50, true);
+
 //	if(autoRoutineID == 0){
 /*		strafeMode = true;
 		startTask(driving);
@@ -100,6 +112,7 @@ task autonomous()
 		// leftDriveSpeed = 0;
 		// rightDriveSpeed = 0; */
 //	}
+	playTone(100000, 2000);
 }
 
 task usercontrol()

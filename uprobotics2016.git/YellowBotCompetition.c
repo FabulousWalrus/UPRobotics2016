@@ -43,11 +43,11 @@ void pre_auton()
 }
 task autonomous()
 {
+	strafeMode = true;
 	startTask(driving);
-	driveForward(600, 40);
-	while(true){
-		delay(1000);
-	}
+	driveForward(-100, 40);
+	strafeSpeed = 50
+}
 
 //	if(autoRoutineID == 0){
 //		strafeMode = true;
@@ -98,7 +98,7 @@ task autonomous()
 //		leftDriveSpeed = 0;
 //		rightDriveSpeed = 0;
 ////	}
-}
+
 
 task usercontrol()
 {
