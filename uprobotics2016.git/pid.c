@@ -20,7 +20,7 @@ void driveForward(int distanceCM, int targetSpeed, bool brake){
 	// Wait until distance is traveled
 	while(abs(SensorValue[LeftDriver]) < abs(targetClicks)){
 
-		delay( 10 );
+		delay(2);
 	}
 
 	//brake, then coast
@@ -50,14 +50,14 @@ void armPosition(int mArmPosition, int mThrowerSpeed, int timeOut) {
 
 		throwerSpeed = mThrowerSpeed;
 
-		delay(10);
+		delay(2);
 		}
 	}
 	else {
 		while((mArmPosition < SensorValue[ThrowerEncoder]) && (timeOut > time1[T1])) {
 			throwerSpeed = mThrowerSpeed * -1;
 
-			delay(10);
+			delay(2);
 		}
 	}
 
@@ -65,30 +65,41 @@ void armPosition(int mArmPosition, int mThrowerSpeed, int timeOut) {
 
 }
 
-void spinClockwise(int degrees, int spinPower, bool brake) {
+void spin(int degrees, int spinPower, bool brake) {
 
 	strafeMode = false;
 
 	SensorValue[LeftDriver] = 0;
 	SensorValue[RightDriver] = 0;
 
-	int spinTargetClicks = degrees * 8;
+	long spinTargetClicks = degrees * 2.35;
 
-	while(abs(spinTargetClicks) > abs(SensorValue[LeftDriver])) {
-		motor[leftDrive] = spinPower * sgn(degrees);
-		motor[rightDrive] = -1 * spinPower * sgn(degrees);
+	while(abs(spinTargetClicks) > abs(SensorValue[LeftDriver])){
+		leftDriveSpeed = spinPower * sgn(degrees);
+		rightDriveSpeed = -1 * spinPower * sgn(degrees);
 
-		delay(10);
+		delay(2);
 	}
 
 	if(brake == true) {
-		motor[leftDrive] = -10 * sgn(degrees);
-		motor[rightDrive] = 10 * sgn(degrees);
+		leftDriveSpeed = -10 * sgn(degrees);
+		rightDriveSpeed = 10 * sgn(degrees);
 	}
 
 	delay(100);
 
-	motor[leftDrive] = 0;
-	motor[rightDrive] = 0;
+	leftDriveSpeed = 0;
+	rightDriveSpeed = 0;
+}
 
+task autoRobotGo {
+
+	armPosition(-50, 120, 2000);
+	armPosition(80, 80, 2000);
+	driveForward(-80, 127, true);
+	armPosition(450, 127, 3000);
+	delay(250);
+	armPosition(400, 100, 3000);
+	spin(-90, 40, true);
+	driveForward(200, 100, true);
 }

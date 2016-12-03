@@ -1,4 +1,7 @@
 #pragma config(I2C_Usage, I2C1, i2cSensors)
+#pragma config(Sensor, dgtl1,  LeftDriver,     sensorQuadEncoder)
+#pragma config(Sensor, dgtl3,  RightDriver,    sensorQuadEncoder)
+#pragma config(Sensor, dgtl5,  fakeThrower,    sensorQuadEncoder)
 #pragma config(Sensor, I2C_1,  StrafeEncoder,  sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Sensor, I2C_2,  ThrowerEncoder, sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Sensor, I2C_3,  LeftDriver,     sensorQuadEncoderOnI2CPort,    , AutoAssign)
