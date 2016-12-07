@@ -1,4 +1,22 @@
-void driveForward(int distanceCM, int targetSpeed, bool brake){
+void lineFollow(int mStrafeSpeed) {
+
+	if(SensorValue[lineFollowerInner] > SensorValue[lineFollowerCenter]) {
+		strafeSpeed = mStrafeSpeed;
+	}
+
+	else if(SensorValue[lineFollowerOuter] > SensorValue[lineFollowerCenter]) {
+		strafeSpeed = mStrafeSpeed * -1;
+	}
+
+	else {
+		strafeSpeed = 0;
+	}
+
+}
+
+// =(
+
+void driveForward(int distanceCM, int targetSpeed, bool brake, bool lineFollower){
 
 	SensorValue[LeftDriver] = 0;
 	SensorValue[RightDriver] = 0;
@@ -19,11 +37,16 @@ void driveForward(int distanceCM, int targetSpeed, bool brake){
 
 	// Wait until distance is traveled
 	while(abs(SensorValue[LeftDriver]) < abs(targetClicks)){
+		if(lineFollower == true) {
+			lineFollow(50);
+		}
 
 		delay(2);
 	}
 
 	//brake, then coast
+
+	strafeSpeed = 0;
 
 	if(brake == true) {
 
@@ -96,10 +119,10 @@ task autoRobotGo {
 
 	armPosition(-50, 120, 2000);
 	armPosition(80, 80, 2000);
-	driveForward(-80, 127, true);
+	driveForward(-80, 127, true, false);
 	armPosition(450, 127, 3000);
 	delay(250);
 	armPosition(400, 100, 3000);
 	spin(-90, 40, true);
-	driveForward(200, 100, true);
+	driveForward(200, 100, true, false);
 }

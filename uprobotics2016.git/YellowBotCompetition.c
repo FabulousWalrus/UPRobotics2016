@@ -1,3 +1,6 @@
+#pragma config(Sensor, in2,    lineFollowerInner, sensorLineFollower)
+#pragma config(Sensor, in3,    lineFollowerCenter, sensorLineFollower)
+#pragma config(Sensor, in4,    lineFollowerOuter, sensorLineFollower)
 #pragma config(Sensor, dgtl1,  LeftDriver,     sensorQuadEncoder)
 #pragma config(Sensor, dgtl3,  RightDriver,    sensorQuadEncoder)
 #pragma config(Sensor, dgtl5,  ThrowerEncoder, sensorQuadEncoder)
