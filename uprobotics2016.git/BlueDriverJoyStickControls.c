@@ -1,11 +1,13 @@
 // Read Buttons to see if any are pushed
 
 bool strafeMode = false;
+bool sideStrafe = false;
 
 int strafeSpeed = 0;
 int rightDriveSpeed = 0;
 int leftDriveSpeed = 0;
 int liftSpeed = 0;
+int slideLeftSpeed = 0;
 
 // fork has been removed
 // int forkSpeed = 0;
@@ -46,7 +48,7 @@ task controllerPolling(){
 			throwerSpeed = vexRT[Ch3Xmtr2];
 		}
 		else if((vexRT[Ch2Xmtr2] > 20) || (vexRT[Ch2Xmtr2] < - 20)) {
-			throwerSpeed = vexRT[Ch2Xmtr2] / 3;
+			throwerSpeed = vexRT[Ch2Xmtr2] / 2;
 		}
 		else {
 			throwerSpeed = 0;
@@ -60,11 +62,22 @@ task controllerPolling(){
 
 		if(vexRT[Btn5U] == 1)
 		{
-			throwerSpeed = 127;
+			slideLeftSpeed = -50;
 		}
 		else if(vexRT[Btn5D] == 1)
 		{
-			throwerSpeed = -127;
+			slideLeftSpeed = -90;
+		}
+		else if(vexRT[Btn6U] == 1)
+		{
+			slideLeftSpeed = 50;
+		}
+		else if(vexRT[Btn6D] == 1)
+		{
+			slideLeftSpeed = 90;
+		}
+		else {
+			slideLeftSpeed = 0;
 		}
 
 		if(vexRT[Btn6UXmtr2] == 1)
@@ -78,6 +91,12 @@ task controllerPolling(){
 
 		else {
 			liftSpeed = 0;
+		}
+		if(vexRT[Btn8U] == 1){
+			throwerSpeed = 80;
+		}
+		else if(vexRT[Btn8R]){
+			throwerSpeed = -80;
 		}
 	//	if(vexRT[Btn6U] == 1)
 	//	{
@@ -121,21 +140,25 @@ task driving(){
 		// Tank Drive Mode
 		if(strafeMode == false){
 			//Right Drive;
-				motor[rightDrive] = rightDriveSpeed;
-				motor[leftDrive] = leftDriveSpeed;
-				motor[liftLeft] = liftSpeed;
-				motor[liftRight] = liftSpeed;
+				motor[rightDrive]   = rightDriveSpeed;
+				motor[leftDrive]    = leftDriveSpeed;
+				motor[liftLeft]     = liftSpeed;
+				motor[liftRight]    = liftSpeed;
+				motor[strafeDrive] 	= slideLeftSpeed;
+				motor[strafeFront]  = slideLeftSpeed;
 
 				currentLeftClicks = 0;
 				currentRightClicks = 0;
 				currentError = 0;
 				sumError = 0;
+
+				strafeSpeed = slideLeftSpeed;
 		}
 //In strafeMode
 		else {
 
 			currentLeftClicks =  SensorValue[LeftDriver];
-			currentRightClicks =  SensorValue[RightDriver];
+			currentRightClicks =  SensorValue[RightDriver] * -1;
 
 			// get error ( targetSpeed - realSpeed )
 			currentError = currentLeftClicks - currentRightClicks;
@@ -151,6 +174,7 @@ task driving(){
 			motor[rightDrive] 	= adjustedRightDriveSpeed;
 			motor[leftDrive] 		= adjustedLeftDriveSpeed;
 			motor[strafeDrive] 	= strafeSpeed;
+			motor[strafeFront]  = strafeSpeed;
 		}
 	}
 		delay(5);

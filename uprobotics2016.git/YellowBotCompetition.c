@@ -7,6 +7,7 @@
 #pragma config(Motor,  port2,           leftDrive,     tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port3,           rightDrive,    tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port4,           strafeDrive,   tmotorVex393_MC29, openLoop, reversed)
+#pragma config(Motor,  port5,           strafeFront,   tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port6,           liftRight,     tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port7,           liftLeft,      tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port8,           rightThrow,    tmotorVex393_MC29, openLoop, reversed)

@@ -1,10 +1,10 @@
 void lineFollow(int mStrafeSpeed) {
 
-	if(SensorValue[lineFollowerInner] > SensorValue[lineFollowerCenter]) {
+	if(SensorValue[lineFollowerInner] < SensorValue[lineFollowerCenter] + 500) {
 		strafeSpeed = mStrafeSpeed;
 	}
 
-	else if(SensorValue[lineFollowerOuter] > SensorValue[lineFollowerCenter]) {
+	else if(SensorValue[lineFollowerOuter] < SensorValue[lineFollowerCenter] + 500) {
 		strafeSpeed = mStrafeSpeed * -1;
 	}
 
@@ -12,6 +12,33 @@ void lineFollow(int mStrafeSpeed) {
 		strafeSpeed = 0;
 	}
 
+}
+
+bool foundLine = false;
+
+bool findLine(int oStrafeSpeed, int mLoopCounter){
+
+	int loopCounter = 0;
+
+	if(foundLine == false) {
+		while((foundLine == false) && (loopCounter < mLoopCounter * 4)){
+			if(loopCounter < mLoopCounter){
+				strafeSpeed = oStrafeSpeed;
+			}
+			else if(loopCounter < mLoopCounter * 2){
+				strafeSpeed = oStrafeSpeed * -1;
+			}
+			else {
+				strafeSpeed = oStrafeSpeed;
+			}
+			if((SensorValue[lineFollowerCenter] + 500 < SensorValue[lineFollowerInner]) && (SensorValue[lineFollowerCenter] + 500 < SensorValue[lineFollowerOuter])){
+				foundLine = true;
+			}
+			loopCounter = loopCounter + 1;
+			delay(3);
+		}
+	}
+	return foundLine;
 }
 
 // =(
@@ -37,10 +64,9 @@ void driveForward(int distanceCM, int targetSpeed, bool brake, bool lineFollower
 
 	// Wait until distance is traveled
 	while(abs(SensorValue[LeftDriver]) < abs(targetClicks)){
-		if(lineFollower == true) {
-			lineFollow(50);
+		if(lineFollower == true){
+			lineFollow(30);
 		}
-
 		delay(2);
 	}
 
@@ -61,6 +87,7 @@ void driveForward(int distanceCM, int targetSpeed, bool brake, bool lineFollower
 	rightDriveSpeed = 0;
 
 	strafeMode = false;
+	lineFollower = false;
 
 }
 
@@ -115,14 +142,35 @@ void spin(int degrees, int spinPower, bool brake) {
 	rightDriveSpeed = 0;
 }
 
+void strafeAuto(int nStrafeSpeed, int strafeDistance){
+	SensorValue[LeftDriver]  = 0;
+	SensorValue[RightDriver] = 0;
+	strafeMode = true;
+	SensorValue[StrafeDrive] = 0;
+	while(abs(strafeDistance) > abs(SensorValue[StrafeDrive])){
+		strafeSpeed = nStrafeSpeed * sgn(strafeDistance);
+		delay(2);
+	}
+	strafeSpeed = 0;
+}
+
 task autoRobotGo {
 
-	armPosition(-50, 120, 2000);
-	armPosition(80, 80, 2000);
-	driveForward(-80, 127, true, false);
-	armPosition(450, 127, 3000);
+	strafeAuto(100, -400);
+	armPosition(-60, 120, 2000);
+	armPosition(140, 80, 2000); // Claw Deployed
+	driveForward(-121, 127, true, false); // Drive To Wall
+	armPosition(450, 127, 3000); // Star Thrown
 	delay(250);
-	armPosition(400, 100, 3000);
-	spin(-90, 40, true);
-	driveForward(200, 100, true, false);
+	armPosition(380, 100, 3000);
+	spin(-130, 50, true);
+	driveForward(-60, 30, true, true);
+	strafeAuto(80, 100);
+	driveForward(-80, 30, true, false);
+	strafeAuto(80, -100);
+	/*driveForward(-50, 30, true, true);
+	strafeAuto(80);
+	driveForward(-20, 30, true, false);
+	strafeAuto(-80);
+	driveForward(-50, 30, true, true); */
 }

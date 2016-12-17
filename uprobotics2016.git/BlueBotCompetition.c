@@ -1,14 +1,15 @@
 #pragma config(I2C_Usage, I2C1, i2cSensors)
-#pragma config(Sensor, dgtl1,  LeftDriver,     sensorQuadEncoder)
-#pragma config(Sensor, dgtl3,  RightDriver,    sensorQuadEncoder)
-#pragma config(Sensor, dgtl5,  fakeThrower,    sensorQuadEncoder)
-#pragma config(Sensor, I2C_1,  StrafeEncoder,  sensorQuadEncoderOnI2CPort,    , AutoAssign)
+#pragma config(Sensor, in2,    lineFollowerInner, sensorLineFollower)
+#pragma config(Sensor, in3,    lineFollowerCenter, sensorLineFollower)
+#pragma config(Sensor, in4,    lineFollowerOuter, sensorLineFollower)
+#pragma config(Sensor, I2C_1,  StrafeDrive,    sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Sensor, I2C_2,  ThrowerEncoder, sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Sensor, I2C_3,  LeftDriver,     sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Sensor, I2C_4,  RightDriver,    sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Motor,  port2,           leftDrive,     tmotorVex393_MC29, openLoop, encoderPort, I2C_3)
 #pragma config(Motor,  port3,           rightDrive,    tmotorVex393_MC29, openLoop, reversed, encoderPort, I2C_4)
 #pragma config(Motor,  port4,           strafeDrive,   tmotorVex393_MC29, openLoop, reversed, encoderPort, I2C_1)
+#pragma config(Motor,  port5,           strafeFront,   tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port6,           liftRight,     tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port7,           liftLeft,      tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port8,           rightThrow,    tmotorVex393_MC29, openLoop, reversed)
@@ -54,68 +55,7 @@ task autonomous()
 {
 	startTask(driving);
 	startTask(throwerControl);
-	//delay(300);
-	armPosition(-50, 120, 2000);
-	armPosition(80, 80, 2000);
-	driveForward(-130, 127, true);
-	armPosition(450, 127, 3000);
-	//delay(300);
-	//spinClockwise(90, 80, true);
-	//delay(300);
-	//driveForward(30, 50, true);
-
-//	if(autoRoutineID == 0){
-/*		strafeMode = true;
-		startTask(driving);
-		rightDriveSpeed = 80;
-		leftDriveSpeed = 50;
-		delay(10);
-		rightDriveSpeed = 0;
-		leftDriveSpeed = 0;
-		strafeSpeed = 50;
-		delay(750);
-		strafeSpeed = -50;
-		rightDriveSpeed = 0;
-		leftDriveSpeed = 0;
-		throwerSpeed = 127;
-		delay(7000);
-		strafeSpeed = 50;
-		rightDriveSpeed = 0;
-		leftDriveSpeed = 0;
-		throwerSpeed = 127;
-		delay(7000);
-		strafeSpeed = 0;
-		throwerSpeed = 0;
-		leftDriveSpeed = 0;
-		rightDriveSpeed = 0;
-//		forkSpeed = 0;
-//	}
-//	if(autoRoutineID == 1){
-		strafeMode = true;
-		startTask(driving);
-		rightDriveSpeed = 80;
-		leftDriveSpeed = 50;
-		delay(10);
-		rightDriveSpeed = 0;
-		leftDriveSpeed = 0;
-		strafeSpeed = -50;
-		delay(750);
-		strafeSpeed = 50;
-		rightDriveSpeed = 0;
-		leftDriveSpeed = 0;
-		throwerSpeed = 127;
-		// delay(7000);
-		// strafeSpeed = -50;
-		// rightDriveSpeed = 0;
-		// leftDriveSpeed = 0;
-		// throwerSpeed = 127;
-		// delay(7000);
-		// strafeSpeed = 0;
-		// throwerSpeed = 0;
-		// leftDriveSpeed = 0;
-		// rightDriveSpeed = 0; */
-//	}
-	playTone(100000, 2000);
+	startTask(autoRobotGo);
 }
 
 task usercontrol()
