@@ -1,14 +1,5 @@
 // Read Buttons to see if any are pushed
 
-bool strafeMode = false;
-bool sideStrafe = false;
-
-int strafeSpeed = 0;
-int rightDriveSpeed = 0;
-int leftDriveSpeed = 0;
-int liftSpeed = 0;
-int slideLeftSpeed = 0;
-
 // fork has been removed
 // int forkSpeed = 0;
 
@@ -48,7 +39,12 @@ task controllerPolling(){
 			throwerSpeed = vexRT[Ch3Xmtr2];
 		}
 		else if((vexRT[Ch2Xmtr2] > 20) || (vexRT[Ch2Xmtr2] < - 20)) {
-			throwerSpeed = vexRT[Ch2Xmtr2] / 2;
+			if(vexRT[Ch2Xmtr2] > 0){
+				throwerSpeed = 40 + vexRT[Ch2Xmtr2] / 2;
+			}
+			else {
+				throwerSpeed = vexRT[Ch2Xmtr2] / 4;
+			}
 		}
 		else {
 			throwerSpeed = 0;
@@ -97,6 +93,13 @@ task controllerPolling(){
 		}
 		else if(vexRT[Btn8R]){
 			throwerSpeed = -80;
+		}
+
+		if(vexRT[Btn5UXmtr2] == 1){
+			startTask(armPositionHigh);
+		}
+		else if(vexRT[Btn5DXmtr2] == 1){
+			startTask(armPositionLow);
 		}
 	//	if(vexRT[Btn6U] == 1)
 	//	{

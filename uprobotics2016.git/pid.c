@@ -65,7 +65,7 @@ void driveForward(int distanceCM, int targetSpeed, bool brake, bool lineFollower
 	// Wait until distance is traveled
 	while(abs(SensorValue[LeftDriver]) < abs(targetClicks)){
 		if(lineFollower == true){
-			lineFollow(30);
+			lineFollow(40);
 		}
 		delay(2);
 	}
@@ -156,21 +156,35 @@ void strafeAuto(int nStrafeSpeed, int strafeDistance){
 
 task autoRobotGo {
 
-	strafeAuto(100, -400);
+	//strafeAuto(100, -400);
+	driveForward(-40, 80, true, false);
 	armPosition(-60, 120, 2000);
+	delay(500);
 	armPosition(140, 80, 2000); // Claw Deployed
-	driveForward(-121, 127, true, false); // Drive To Wall
-	armPosition(450, 127, 3000); // Star Thrown
+	driveForward(-75, 80, true, false); // Drive To Wall
+	armPosition(520, 127, 3000); // Star Thrown
 	delay(250);
-	armPosition(380, 100, 3000);
-	spin(-130, 50, true);
-	driveForward(-60, 30, true, true);
-	strafeAuto(80, 100);
-	driveForward(-80, 30, true, false);
-	strafeAuto(80, -100);
-	/*driveForward(-50, 30, true, true);
-	strafeAuto(80);
-	driveForward(-20, 30, true, false);
-	strafeAuto(-80);
-	driveForward(-50, 30, true, true); */
+	armPosition(340, 100, 3000);
+	if(SensorValue[autoMode] == 1){
+
+		spin(-165, 50, true);
+		driveForward(-220, 50, true, true);
+		/*strafeAuto(80, 100);
+		driveForward(-80, 30, true, false);
+		strafeAuto(80, -100);
+		/*driveForward(-50, 30, true, true);
+		strafeAuto(80);
+		driveForward(-20, 30, true, false);
+		strafeAuto(-80);
+		driveForward(-50, 30, true, true); */
+		//driveForward(-200, 40, true, true);
+	}
+}
+
+task armPositionLow() {
+	armPosition(340, 80, 3000);
+}
+
+task armPositionHigh() {
+	armPosition(360, 80, 3000);
 }

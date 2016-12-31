@@ -2,6 +2,7 @@
 #pragma config(Sensor, in2,    lineFollowerInner, sensorLineFollower)
 #pragma config(Sensor, in3,    lineFollowerCenter, sensorLineFollower)
 #pragma config(Sensor, in4,    lineFollowerOuter, sensorLineFollower)
+#pragma config(Sensor, dgtl1,  autoMode,       sensorDigitalIn)
 #pragma config(Sensor, I2C_1,  StrafeDrive,    sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Sensor, I2C_2,  ThrowerEncoder, sensorQuadEncoderOnI2CPort,    , AutoAssign)
 #pragma config(Sensor, I2C_3,  LeftDriver,     sensorQuadEncoderOnI2CPort,    , AutoAssign)
@@ -23,11 +24,12 @@
 #pragma autonomousDuration(20)
 #pragma userControlDuration(120)
 
+#include "GlobalVariables.c" // Variables for all
 #include "ThrowerControl.c" // Controls the thrower
 #include "Vex_Competition_Includes.c"   //Main competition background code...do not modify!
+#include "Pid.c" // PID controller program its self explanatory idiot
 #include "BlueDriverJoyStickControls.c" // User Controls For User Controlled Period
 //#include "LEDLightTimers.c" // Led Light Timer for User Control Part
-#include "Pid.c" // PID controller program its self explanatory idiot
 //#include "LCDDisplay2016.c"
 
 //int autoRoutineID = 0;
