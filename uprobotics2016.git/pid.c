@@ -14,9 +14,12 @@ void lineFollow(int mStrafeSpeed) {
 
 }
 
-bool foundLine = false;
-
 bool findLine(int oStrafeSpeed, int mLoopCounter){
+	bool foundLine = false;
+	strafeMode = true;
+
+	SensorValue[LeftDriver] = 0;
+	SensorValue[RightDriver] = 0;
 
 	int loopCounter = 0;
 
@@ -25,7 +28,7 @@ bool findLine(int oStrafeSpeed, int mLoopCounter){
 			if(loopCounter < mLoopCounter){
 				strafeSpeed = oStrafeSpeed;
 			}
-			else if(loopCounter < mLoopCounter * 2){
+			else if(loopCounter < mLoopCounter * 3){
 				strafeSpeed = oStrafeSpeed * -1;
 			}
 			else {
@@ -33,12 +36,15 @@ bool findLine(int oStrafeSpeed, int mLoopCounter){
 			}
 			if((SensorValue[lineFollowerCenter] + 500 < SensorValue[lineFollowerInner]) && (SensorValue[lineFollowerCenter] + 500 < SensorValue[lineFollowerOuter])){
 				foundLine = true;
+				strafeSpeed = 20 * sgn(strafeSpeed) * -1;
+				delay(100);
 			}
 			loopCounter = loopCounter + 1;
 			delay(3);
 		}
 	}
 	return foundLine;
+	strafeMode = false;
 }
 
 // =(
@@ -154,21 +160,37 @@ void strafeAuto(int nStrafeSpeed, int strafeDistance){
 	strafeSpeed = 0;
 }
 
-task autoRobotGo {
+/*void liftAuto(int mLiftSpeed, int nLoopCounter){
+	int loopCounter = 0;
 
-	//strafeAuto(100, -400);
-	driveForward(-40, 80, true, false);
-	armPosition(-60, 120, 2000);
+	while(loopCounter < nLoopCounter) {
+		liftSpeed = mLiftSpeed;
+		loopCounter = loopCounter + 1;
+		delay(2);
+	}
+}
+*/
+
+task autoRobotGo {
+	driveForward(-150, 50, true, true);
+	/*driveForward(-50, 50, true, false);
+	armPosition(-78, 120, 2000);
 	delay(500);
-	armPosition(140, 80, 2000); // Claw Deployed
-	driveForward(-75, 80, true, false); // Drive To Wall
-	armPosition(520, 127, 3000); // Star Thrown
+	armPosition(182, 50, 2000); // Claw Deployed
+	driveForward(-75, 50, true, false); // Drive To Wall
+	armPosition(676, 127, 3000); // Star Thrown
 	delay(250);
-	armPosition(340, 100, 3000);
+	armPosition(442, 100, 3000);
 	if(SensorValue[autoMode] == 1){
 
-		spin(-165, 50, true);
-		driveForward(-220, 50, true, true);
+		spin(-145, 50, true);
+		bool lineWasFound = findLine(30, 200);
+		if (lineWasFound){
+			driveForward(-220, 50, true, true);
+		}
+		else {
+			driveForward(-220, 50, true, true);
+		}
 		/*strafeAuto(80, 100);
 		driveForward(-80, 30, true, false);
 		strafeAuto(80, -100);
@@ -178,13 +200,13 @@ task autoRobotGo {
 		strafeAuto(-80);
 		driveForward(-50, 30, true, true); */
 		//driveForward(-200, 40, true, true);
-	}
+	//}
 }
 
 task armPositionLow() {
-	armPosition(340, 80, 3000);
+	armPosition(442, 80, 3000);
 }
 
 task armPositionHigh() {
-	armPosition(360, 80, 3000);
+	armPosition(468, 80, 3000);
 }

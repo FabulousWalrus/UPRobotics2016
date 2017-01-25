@@ -76,7 +76,7 @@ task controllerPolling(){
 			slideLeftSpeed = 0;
 		}
 
-		if(vexRT[Btn6UXmtr2] == 1)
+		/*if(vexRT[Btn6UXmtr2] == 1)
 		{
 			liftSpeed = 127;
 		}
@@ -87,7 +87,7 @@ task controllerPolling(){
 
 		else {
 			liftSpeed = 0;
-		}
+		} */
 		if(vexRT[Btn8U] == 1){
 			throwerSpeed = 80;
 		}
@@ -145,8 +145,8 @@ task driving(){
 			//Right Drive;
 				motor[rightDrive]   = rightDriveSpeed;
 				motor[leftDrive]    = leftDriveSpeed;
-				motor[liftLeft]     = liftSpeed;
-				motor[liftRight]    = liftSpeed;
+			//	motor[liftLeft]     = liftSpeed;
+			//	motor[liftRight]    = liftSpeed;
 				motor[strafeDrive] 	= slideLeftSpeed;
 				motor[strafeFront]  = slideLeftSpeed;
 
@@ -161,7 +161,7 @@ task driving(){
 		else {
 
 			currentLeftClicks =  SensorValue[LeftDriver];
-			currentRightClicks =  SensorValue[RightDriver] * -1;
+			currentRightClicks =  SensorValue[RightDriver];
 
 			// get error ( targetSpeed - realSpeed )
 			currentError = currentLeftClicks - currentRightClicks;

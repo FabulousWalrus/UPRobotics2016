@@ -18,6 +18,8 @@ task throwerControl()
 		if (throwerSpeed != 0){
 			motor[leftThrow] = throwerSpeed;
 			motor[rightThrow] = throwerSpeed;
+			motor[rightThrowThree] = throwerSpeed;
+			motor[leftThrowThree] = 0;
 			isHolding = false;
 		}
 		// Else, hold
@@ -44,6 +46,8 @@ task throwerControl()
 			// now apply the hold pwer
 			motor[leftThrow] = holdPower;
 			motor[rightThrow] = holdPower;
+			motor[rightThrowThree] = holdPower;
+			motor[leftThrowThree] = holdPower;
 		}
 
 		delay(10);
