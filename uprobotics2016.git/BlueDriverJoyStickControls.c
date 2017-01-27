@@ -161,7 +161,7 @@ task driving(){
 		else {
 
 			currentLeftClicks =  SensorValue[LeftDriver];
-			currentRightClicks =  SensorValue[RightDriver];
+			currentRightClicks =  SensorValue[RightDriver] * -1;
 
 			// get error ( targetSpeed - realSpeed )
 			currentError = currentLeftClicks - currentRightClicks;

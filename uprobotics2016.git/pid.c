@@ -170,15 +170,20 @@ void strafeAuto(int nStrafeSpeed, int strafeDistance){
 	}
 }
 */
+task armDeploy() {
+	armPosition(-78, 120, 2000);
+	armPosition(182, 50, 2000); // Claw Deployed
+}
+
+task starThrow() {
+	armPosition(676, 127, 3000); // Star Thrown
+}
 
 task autoRobotGo {
-	driveForward(-150, 50, true, true);
-	/*driveForward(-50, 50, true, false);
-	armPosition(-78, 120, 2000);
-	delay(500);
-	armPosition(182, 50, 2000); // Claw Deployed
-	driveForward(-75, 50, true, false); // Drive To Wall
-	armPosition(676, 127, 3000); // Star Thrown
+	startTask(armDeploy);
+	driveForward(-100, 100, true, false);
+	startTask(starThrow);
+	driveForward(-25, 100, true, false); // Drive To Wall
 	delay(250);
 	armPosition(442, 100, 3000);
 	if(SensorValue[autoMode] == 1){
@@ -200,7 +205,7 @@ task autoRobotGo {
 		strafeAuto(-80);
 		driveForward(-50, 30, true, true); */
 		//driveForward(-200, 40, true, true);
-	//}
+	}
 }
 
 task armPositionLow() {

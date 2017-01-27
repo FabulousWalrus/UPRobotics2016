@@ -19,7 +19,7 @@ task throwerControl()
 			motor[leftThrow] = throwerSpeed;
 			motor[rightThrow] = throwerSpeed;
 			motor[rightThrowThree] = throwerSpeed;
-			motor[leftThrowThree] = 0;
+			motor[leftThrowThree] = throwerSpeed;
 			isHolding = false;
 		}
 		// Else, hold
