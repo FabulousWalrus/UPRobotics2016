@@ -58,19 +58,19 @@ task controllerPolling(){
 
 		if(vexRT[Btn5U] == 1)
 		{
-			slideLeftSpeed = -50;
+			slideLeftSpeed = -70;
 		}
 		else if(vexRT[Btn5D] == 1)
 		{
-			slideLeftSpeed = -90;
+			slideLeftSpeed = -120;
 		}
 		else if(vexRT[Btn6U] == 1)
 		{
-			slideLeftSpeed = 50;
+			slideLeftSpeed = 70;
 		}
 		else if(vexRT[Btn6D] == 1)
 		{
-			slideLeftSpeed = 90;
+			slideLeftSpeed = 120;
 		}
 		else {
 			slideLeftSpeed = 0;

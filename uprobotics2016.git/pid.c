@@ -1,6 +1,22 @@
-void lineFollow(int mStrafeSpeed) {
+void lineFollow(int mStrafeSpeed, bool firstLoop) {
+	outerCurrentLineError = 0;
+	innerCurrentLineError = 0;
+	if(SensorValue[lineFollowerOuter] < SensorValue[lineFollowerCenter]){
+		outerCurrentLineError = (SensorValue[lineFollowerCenter] - SensorValue[lineFollowerOuter]) * -1;
+	}
+	if(SensorValue[lineFollowerInner] < SensorValue[lineFollowerCenter]){
+		innerCurrentLineError = SensorValue[lineFollowerCenter] - SensorValue[lineFollowerInner];
+	}
+	if(firstLoop == true){
+		lineSumError = 0;
+	}
 
-	if(SensorValue[lineFollowerInner] < SensorValue[lineFollowerCenter] + 500) {
+	currentLineError = outerCurrentLineError + innerCurrentLineError;
+	lineSumError = lineSumError + currentLineError;
+	lineDeltaPower = ( currentLineError * pid_Kp_line ) + (lineSumError * pid_Ki_line );
+
+	strafeSpeed = lineDeltaPower;
+	/*if(SensorValue[lineFollowerInner] < SensorValue[lineFollowerCenter] + 500) {
 		strafeSpeed = mStrafeSpeed;
 	}
 
@@ -10,7 +26,7 @@ void lineFollow(int mStrafeSpeed) {
 
 	else {
 		strafeSpeed = 0;
-	}
+	} */
 
 }
 
@@ -68,10 +84,13 @@ void driveForward(int distanceCM, int targetSpeed, bool brake, bool lineFollower
 
 	int targetClicks = distanceCM * 11;
 
+	bool firstLoop = true;
+
 	// Wait until distance is traveled
 	while(abs(SensorValue[LeftDriver]) < abs(targetClicks)){
 		if(lineFollower == true){
-			lineFollow(40);
+			lineFollow(40, firstLoop);
+			firstLoop = false;
 		}
 		delay(2);
 	}
@@ -180,7 +199,8 @@ task starThrow() {
 }
 
 task autoRobotGo {
-	startTask(armDeploy);
+	driveForward(2000, 50, true, true);
+	/*startTask(armDeploy);
 	driveForward(-100, 100, true, false);
 	startTask(starThrow);
 	driveForward(-25, 100, true, false); // Drive To Wall
@@ -203,9 +223,9 @@ task autoRobotGo {
 		strafeAuto(80);
 		driveForward(-20, 30, true, false);
 		strafeAuto(-80);
-		driveForward(-50, 30, true, true); */
+		driveForward(-50, 30, true, true);
 		//driveForward(-200, 40, true, true);
-	}
+	} */
 }
 
 task armPositionLow() {
