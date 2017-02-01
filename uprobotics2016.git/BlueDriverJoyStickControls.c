@@ -76,6 +76,14 @@ task controllerPolling(){
 			slideLeftSpeed = 0;
 		}
 
+		if(vexRT[Btn8L] == 1){
+			sensorValue[in1] = 0;
+		}
+
+		if(vexRT[Btn7L] == 1){
+			setHeading(0, 127, true);
+		}
+
 		/*if(vexRT[Btn6UXmtr2] == 1)
 		{
 			liftSpeed = 127;

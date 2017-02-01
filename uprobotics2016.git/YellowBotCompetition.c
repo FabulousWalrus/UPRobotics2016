@@ -1,7 +1,6 @@
 #pragma config(Sensor, in2,    lineFollowerInner, sensorLineFollower)
 #pragma config(Sensor, in3,    lineFollowerCenter, sensorLineFollower)
 #pragma config(Sensor, in4,    lineFollowerOuter, sensorLineFollower)
-#pragma config(Sensor, in5,    Gyro,           sensorGyro)
 #pragma config(Sensor, dgtl1,  LeftDriver,     sensorQuadEncoder)
 #pragma config(Sensor, dgtl5,  ThrowerEncoder, sensorQuadEncoder)
 #pragma config(Sensor, dgtl7,  RightDriver,    sensorQuadEncoder)
@@ -47,6 +46,12 @@ void pre_auton()
   // Set bStopTasksBetweenModes to false if you want to keep user created tasks running between
   // Autonomous and Tele-Op modes. You will need to manage all user created tasks if set to false.
   bStopTasksBetweenModes = true;
+  SensorType[in1] = sensorNone;
+  wait1Msec(1000);
+  //Reconfigure Analog Port 8 as a Gyro sensor and allow time for ROBOTC to calibrate it
+  SensorType[in1] = sensorGyro;
+  wait1Msec(2000);
+  SensorValue[in1] = 0;
 	//autoRoutineID = getAutoOption();
 
 	// All activities that occur before the competition starts

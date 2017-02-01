@@ -140,6 +140,11 @@ void armPosition(int mArmPosition, int mThrowerSpeed, int timeOut) {
 
 }
 
+/*int calculateSpinDegrees(int desiredHeading) {
+	int calculatedSpinUnits = (desiredHeading * 10) - SensorValue[in1];
+	return (calculatedSpinUnits / 10);
+} */
+
 void spin(int degrees, int spinPower, bool brake) {
 
 	strafeMode = false;
@@ -159,6 +164,51 @@ void spin(int degrees, int spinPower, bool brake) {
 	if(brake == true) {
 		leftDriveSpeed = -10 * sgn(degrees);
 		rightDriveSpeed = 10 * sgn(degrees);
+	}
+
+	delay(100);
+
+	leftDriveSpeed = 0;
+	rightDriveSpeed = 0;
+}
+
+void setHeading(int desiredHeading, int spinPower, bool brake) {
+
+	strafeMode = false;
+	bool turnRight = true;
+
+	SensorValue[LeftDriver] = 0;
+	SensorValue[RightDriver] = 0;
+
+	int deltaRotation = desiredheading - SensorValue[in1];
+
+	if(sgn(deltaRotation) < 0){
+		turnRight = true;
+	}
+	else {
+		turnRight = false;
+	}
+
+	if(turnRight == true){
+		while(desiredHeading > SensorValue[in1]){
+			leftDriveSpeed = spinPower;
+			rightDriveSpeed = -1 * spinPower;
+
+			delay(2);
+		}
+	}
+	else{
+		while(desiredHeading < SensorValue[in1]){
+			leftDriveSpeed = -1 * spinPower;
+			rightDriveSpeed = spinPower;
+
+			delay(2);
+		}
+	}
+
+	if(brake == true) {
+		leftDriveSpeed = -10 * sgn(deltaRotation);
+		rightDriveSpeed = 10 * sgn(deltaRotation);
 	}
 
 	delay(100);
@@ -200,7 +250,7 @@ task starThrow() {
 
 task autoRobotGo {
 	driveForward(2000, 50, true, true);
-	/*startTask(armDeploy);
+	startTask(armDeploy);
 	driveForward(-100, 100, true, false);
 	startTask(starThrow);
 	driveForward(-25, 100, true, false); // Drive To Wall
@@ -216,16 +266,7 @@ task autoRobotGo {
 		else {
 			driveForward(-220, 50, true, true);
 		}
-		/*strafeAuto(80, 100);
-		driveForward(-80, 30, true, false);
-		strafeAuto(80, -100);
-		/*driveForward(-50, 30, true, true);
-		strafeAuto(80);
-		driveForward(-20, 30, true, false);
-		strafeAuto(-80);
-		driveForward(-50, 30, true, true);
-		//driveForward(-200, 40, true, true);
-	} */
+	}
 }
 
 task armPositionLow() {
