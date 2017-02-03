@@ -2,10 +2,10 @@ void lineFollow(int mStrafeSpeed, bool firstLoop) {
 	outerCurrentLineError = 0;
 	innerCurrentLineError = 0;
 	if(SensorValue[lineFollowerOuter] < SensorValue[lineFollowerCenter]){
-		outerCurrentLineError = (SensorValue[lineFollowerCenter] - SensorValue[lineFollowerOuter]) * -1;
+		outerCurrentLineError = (SensorValue[lineFollowerCenter] - SensorValue[lineFollowerOuter]);
 	}
 	if(SensorValue[lineFollowerInner] < SensorValue[lineFollowerCenter]){
-		innerCurrentLineError = SensorValue[lineFollowerCenter] - SensorValue[lineFollowerInner];
+		innerCurrentLineError = (SensorValue[lineFollowerCenter] - SensorValue[lineFollowerInner]) * -1;
 	}
 	if(firstLoop == true){
 		lineSumError = 0;
@@ -50,17 +50,18 @@ bool findLine(int oStrafeSpeed, int mLoopCounter){
 			else {
 				strafeSpeed = oStrafeSpeed;
 			}
-			if((SensorValue[lineFollowerCenter] + 500 < SensorValue[lineFollowerInner]) && (SensorValue[lineFollowerCenter] + 500 < SensorValue[lineFollowerOuter])){
+			if((SensorValue[lineFollowerCenter] + 1000 < SensorValue[lineFollowerInner]) && (SensorValue[lineFollowerCenter] + 1000 < SensorValue[lineFollowerOuter])){
 				foundLine = true;
-				strafeSpeed = 20 * sgn(strafeSpeed) * -1;
+				strafeSpeed = 30 * sgn(strafeSpeed) * -1;
 				delay(100);
 			}
 			loopCounter = loopCounter + 1;
 			delay(3);
 		}
 	}
-	return foundLine;
+	strafeSpeed = 0;
 	strafeMode = false;
+	return foundLine;
 }
 
 // =(
@@ -218,15 +219,35 @@ void setHeading(int desiredHeading, int spinPower, bool brake) {
 }
 
 void strafeAuto(int nStrafeSpeed, int strafeDistance){
-	SensorValue[LeftDriver]  = 0;
-	SensorValue[RightDriver] = 0;
-	strafeMode = true;
+	/*SensorValue[LeftDriver]  = 0;
+	SensorValue[RightDriver] = 0; */
 	SensorValue[StrafeDrive] = 0;
-	while(abs(strafeDistance) > abs(SensorValue[StrafeDrive])){
+
+	strafeMode = true;
+
+	int loopCounter = 0;
+
+	while((abs(strafeDistance) > abs(SensorValue[StrafeDrive])) &&
+		((SensorValue[bumperLeftFront] == 0) && (SensorValue[bumperLeftBack] == 0)) &&
+		((SensorValue[bumperRightFront] == 0) && (SensorValue[bumperLeftBack] == 0)) &&
+		(loopCounter < 5000)){
+
 		strafeSpeed = nStrafeSpeed * sgn(strafeDistance);
+
+		loopCounter = loopCounter + 1;
 		delay(2);
+
 	}
+
+	if((SensorValue[bumperLeftFront] == 1) && (SensorValue[bumperLeftBack] == 1)){
+		delay(500);
+	}
+	else if((SensorValue[bumperRightFront] == 1) && (SensorValue[bumperRightBack] == 1)){
+		delay(500);
+	}
+
 	strafeSpeed = 0;
+	strafeMode = false;
 }
 
 /*void liftAuto(int mLiftSpeed, int nLoopCounter){
@@ -240,7 +261,7 @@ void strafeAuto(int nStrafeSpeed, int strafeDistance){
 }
 */
 task armDeploy() {
-	armPosition(-78, 120, 2000);
+	armPosition(-78, 127, 2000);
 	armPosition(182, 50, 2000); // Claw Deployed
 }
 
@@ -248,23 +269,27 @@ task starThrow() {
 	armPosition(676, 127, 3000); // Star Thrown
 }
 
+task strafeLeftStartToWall() {
+	strafeAuto(80, 130);
+}
+
 task autoRobotGo {
-	driveForward(2000, 50, true, true);
-	startTask(armDeploy);
-	driveForward(-100, 100, true, false);
+	startTask(strafeLeftStartToWall);
+	//startTask(armDeploy);
+	driveForward(-190, 127, true, false);
 	startTask(starThrow);
-	driveForward(-25, 100, true, false); // Drive To Wall
-	delay(250);
-	armPosition(442, 100, 3000);
+	driveForward(-25, 127, true, false); // Drive To Wall
+	delay(1000); // Catch our breath at wall
+	armPosition(400, 60, 3000);
 	if(SensorValue[autoMode] == 1){
 
-		spin(-145, 50, true);
-		bool lineWasFound = findLine(30, 200);
+		spin(290, 90, true);
+		bool lineWasFound = findLine(40, 200);
 		if (lineWasFound){
-			driveForward(-220, 50, true, true);
+			driveForward(-400, 50, true, true);
 		}
 		else {
-			driveForward(-220, 50, true, true);
+			driveForward(-400, 50, true, true);
 		}
 	}
 }
