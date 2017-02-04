@@ -30,6 +30,18 @@ void lineFollow(int mStrafeSpeed, bool firstLoop) {
 
 }
 
+void lineFollowWall(int pStrafeSpeed){
+	if((SensorValue[lineFollowerOuter] > (SensorValue[lineFollowerCenter] + 600)) || (SensorValue[lineFollowerOuter] > (SensorValue[lineFollowerInner] + 400))){
+		strafeSpeed = pStrafeSpeed * -1;
+	}
+	else if(SensorValue[lineFollowerOuter] > 2200){
+		strafeSpeed = pStrafeSpeed;
+	}
+	else {
+		strafeSpeed = 0;
+	}
+}
+
 bool findLine(int oStrafeSpeed, int mLoopCounter){
 	bool foundLine = false;
 	strafeMode = true;
@@ -66,7 +78,7 @@ bool findLine(int oStrafeSpeed, int mLoopCounter){
 
 // =(
 
-void driveForward(int distanceCM, int targetSpeed, bool brake, bool lineFollower){
+void driveForward(int distanceCM, int targetSpeed, bool brake, int lineFollower){
 
 	SensorValue[LeftDriver] = 0;
 	SensorValue[RightDriver] = 0;
@@ -89,9 +101,12 @@ void driveForward(int distanceCM, int targetSpeed, bool brake, bool lineFollower
 
 	// Wait until distance is traveled
 	while(abs(SensorValue[LeftDriver]) < abs(targetClicks)){
-		if(lineFollower == true){
-			lineFollow(40, firstLoop);
+		if(lineFollower == 1){
+			lineFollow(40, true);
 			firstLoop = false;
+		}
+		else if(lineFollower == 2){
+			lineFollowWall(40);
 		}
 		delay(2);
 	}
@@ -261,7 +276,7 @@ void strafeAuto(int nStrafeSpeed, int strafeDistance){
 }
 */
 task armDeploy() {
-	armPosition(-78, 127, 2000);
+	armPosition(-78, 127, 250);
 	armPosition(182, 50, 2000); // Claw Deployed
 }
 
@@ -273,25 +288,67 @@ task strafeLeftStartToWall() {
 	strafeAuto(80, 130);
 }
 
+task strafeRightStartToWall() {
+	strafeAuto(80, -130);
+}
+
 task autoRobotGo {
 	startTask(strafeLeftStartToWall);
-	//startTask(armDeploy);
-	driveForward(-190, 127, true, false);
+	startTask(armDeploy);
+	driveForward(-190, 127, true, 0);
 	startTask(starThrow);
-	driveForward(-25, 127, true, false); // Drive To Wall
+	driveForward(-25, 127, true, 0); // Drive To Wall
 	delay(1000); // Catch our breath at wall
-	armPosition(400, 60, 3000);
-	if(SensorValue[autoMode] == 1){
-
-		spin(290, 90, true);
-		bool lineWasFound = findLine(40, 200);
-		if (lineWasFound){
-			driveForward(-400, 50, true, true);
-		}
-		else {
-			driveForward(-400, 50, true, true);
-		}
+	armPosition(440, 40, 4000);
+	delay(500);
+	spin(250, 90, true);
+	bool lineWasFound = findLine(60, 200);
+	if (lineWasFound){
+		driveForward(-210, 80, true, 2);
 	}
+	else {
+		driveForward(-210, 80, true, 2);
+	}
+	armPosition(360, 60, 4000);
+	driveForward(-200, 80, true, 2);
+	armPosition(420, 40, 4000);
+	driveForward(-110, 80, true, 2);
+	armPosition(530, 127, 4000);
+}
+
+task autoRobotStarThrowGo{
+	startTask(strafeLeftStartToWall);
+	startTask(armDeploy);
+	driveForward(-190, 127, true, 0);
+	startTask(starThrow);
+	driveForward(-25, 127, true, 0); // Drive To Wall
+	delay(1000); // Catch our breath at wall
+	armPosition(440, 40, 3000);
+}
+
+task autoRobotCubeThrowGo{
+	startTask(armDeploy);
+	driveForward(-190, 127, true, 0);
+	startTask(starThrow);
+	driveForward(-25, 127, true, 0); // Drive To Wall
+	delay(1000); // Catch our breath at wall
+	armPosition(440, 40, 3000);
+	delay(500);
+	driveForward(20, 127, true, 0);
+	delay(250);
+	strafeAuto(80, 350); // Strafe To Cube
+	delay(250);
+	driveForward(150, 127, true, 0); // Push Cube To Wall
+	driveForward(-80, 127, true, 0);
+	delay(250);
+	armPosition(20, 60, 3000); // Arm At Cube Position
+	delay(250);
+	driveForward(80, 127, true, 0); // Cube Grabbed
+	delay(250);
+	armPosition(200, 60, 3000); // Lift Cube
+	driveForward(-75, 127, true, 0); // Start Driving To Wall
+	startTask(starThrow); // Throw Cube
+	driveForward(-75, 127, true, 0); // At Wall
 }
 
 task armPositionLow() {

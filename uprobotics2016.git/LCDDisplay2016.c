@@ -1,5 +1,5 @@
-char *options[4];
-const int optionCount = 4;
+char *options[3];
+const int optionCount = 3;
 
 const int leftButton = 1;
 const int centerButton = 2;
@@ -7,10 +7,9 @@ const int rightButton = 4;
 
 
 void setOptions(){
-		options[0] = "Right Auto";
-		options[1] = "Left Auto";
-		options[2] = "Auto-Skills";
-		options[3] = "Driver-Only";
+		options[0] = "Wall Follow Auto";
+		options[1] = "Star Throw Auto";
+		options[2] = "Cube Throw Auto";
 }
 
 int getAutoOption()

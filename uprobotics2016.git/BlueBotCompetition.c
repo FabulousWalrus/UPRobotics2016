@@ -28,6 +28,7 @@
 #pragma autonomousDuration(20)
 #pragma userControlDuration(120)
 
+#include "LCDDisplay2016.c" // LCD Display Control
 #include "GlobalVariables.c" // Variables for all
 #include "ThrowerControl.c" // Controls the thrower
 #include "Vex_Competition_Includes.c"   //Main competition background code...do not modify!
@@ -36,7 +37,7 @@
 //#include "LEDLightTimers.c" // Led Light Timer for User Control Part
 //#include "LCDDisplay2016.c"
 
-//int autoRoutineID = 0;
+int autoRoutineID = 1;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -51,14 +52,13 @@ void pre_auton()
 {
   // Set bStopTasksBetweenModes to false if you want to keep user created tasks running between
   // Autonomous and Tele-Op modes. You will need to manage all user created tasks if set to false.
-  bStopTasksBetweenModes = true;
-  SensorType[in1] = sensorNone;
-  wait1Msec(1000);
-  //Reconfigure Analog Port 8 as a Gyro sensor and allow time for ROBOTC to calibrate it
-  SensorType[in1] = sensorGyro;
-  wait1Msec(2000);
-  SensorValue[in1] = 0;
-	//autoRoutineID = getAutoOption();
+	  bStopTasksBetweenModes = true;
+	  SensorType[in1] = sensorNone;
+	  wait1Msec(1000);
+	  //Reconfigure Analog Port 8 as a Gyro sensor and allow time for ROBOTC to calibrate it
+	  SensorType[in1] = sensorGyro;
+	  wait1Msec(2000);
+	  SensorValue[in1] = 0;
 
 	// All activities that occur before the competition starts
 	// Example: clearing encoders, setting servo positions, ...
@@ -67,7 +67,18 @@ task autonomous()
 {
 	startTask(driving);
 	startTask(throwerControl);
-	startTask(autoRobotGo);
+	if(autoRoutineID == 1){
+		startTask(autoRobotGo);
+	}
+	else if(autoRoutineID == 0){
+		startTask(autoRobotStarThrowGo);
+	}
+	else if(autoRoutineID == 2){
+		startTask(autoRobotCubeThrowGo);
+	}
+	while(true){
+		delay(500);
+	}
 }
 
 task usercontrol()
