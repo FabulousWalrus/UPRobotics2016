@@ -58,7 +58,9 @@ void pre_auton()
 	  //Reconfigure Analog Port 8 as a Gyro sensor and allow time for ROBOTC to calibrate it
 	  SensorType[in1] = sensorGyro;
 	  wait1Msec(2000);
-	  SensorValue[in1] = 0;
+		SensorValue[in1] = 0;
+	  if (SensorValue[autoMode] == 1)
+	  	autoRoutineID = getAutoOption();
 
 	// All activities that occur before the competition starts
 	// Example: clearing encoders, setting servo positions, ...
@@ -67,14 +69,26 @@ task autonomous()
 {
 	startTask(driving);
 	startTask(throwerControl);
-	if(autoRoutineID == 1){
-		startTask(autoRobotGo);
+	if(autoRoutineID == 0){
+		startTask(wallSweep);
 	}
-	else if(autoRoutineID == 0){
-		startTask(autoRobotStarThrowGo);
+	else if(autoRoutineID == 1){
+		startTask(simpleThrow);
 	}
 	else if(autoRoutineID == 2){
-		startTask(autoRobotCubeThrowGo);
+		startTask(quickBlock);
+	}
+	else if(autoRoutineID == 3){
+		startTask(shortSweep);
+	}
+	else if(autoRoutineID == 4){
+		startTask(longBlock);
+	}
+	else if(autoRoutineID == 5){
+		startTask(doubleThrow);
+	}
+	else if(autoRoutineID == 6){
+		startTask(autoRobotGo);
 	}
 	while(true){
 		delay(500);

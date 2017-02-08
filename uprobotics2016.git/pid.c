@@ -288,11 +288,11 @@ task strafeLeftStartToWall() {
 	strafeAuto(80, 130);
 }
 
-task strafeRightStartToWall() {
+task strafeRightToMiddle() {
 	strafeAuto(80, -130);
 }
 
-task autoRobotGo {
+task wallSweep {
 	startTask(strafeLeftStartToWall);
 	startTask(armDeploy);
 	driveForward(-190, 127, true, 0);
@@ -302,13 +302,7 @@ task autoRobotGo {
 	armPosition(440, 40, 4000);
 	delay(500);
 	spin(250, 90, true);
-	bool lineWasFound = findLine(60, 200);
-	if (lineWasFound){
-		driveForward(-210, 80, true, 2);
-	}
-	else {
-		driveForward(-210, 80, true, 2);
-	}
+	driveForward(-210, 80, true, 2);
 	armPosition(360, 60, 4000);
 	driveForward(-200, 80, true, 2);
 	armPosition(420, 40, 4000);
@@ -316,7 +310,7 @@ task autoRobotGo {
 	armPosition(530, 127, 4000);
 }
 
-task autoRobotStarThrowGo{
+task simpleThrow{
 	startTask(strafeLeftStartToWall);
 	startTask(armDeploy);
 	driveForward(-190, 127, true, 0);
@@ -326,7 +320,110 @@ task autoRobotStarThrowGo{
 	armPosition(440, 40, 3000);
 }
 
-task autoRobotCubeThrowGo{
+task shortSweep{
+	startTask(strafeLeftStartToWall);
+	startTask(armDeploy);
+	driveForward(-190, 127, true, 0);
+	startTask(starThrow);
+	driveForward(-25, 127, true, 0); // Drive To Wall
+	delay(1000); // Catch our breath at wall
+	armPosition(440, 40, 4000);
+	delay(500);
+	spin(250, 90, true);
+	driveForward(-210, 80, true, 2);
+	armPosition(360, 60, 4000);
+	driveForward(-200, 80, true, 2);
+}
+
+task longBlock{
+	startTask(strafeLeftStartToWall);
+	startTask(armDeploy);
+	driveForward(-190, 127, true, 0);
+	startTask(starThrow);
+	driveForward(-25, 127, true, 0); // Drive To Wall
+	delay(1000); // Catch our breath at wall
+	armPosition(440, 40, 4000);
+	delay(500);
+	spin(250, 90, true);
+	driveForward(-210, 80, true, 2);
+	armPosition(360, 60, 4000);
+	driveForward(-100, 80, true, 2);
+	spin(-250, 90, true);
+	while(true){
+		strafeAuto(80, 20);
+		delay(250);
+		strafeAuto(80, -20);
+		delay(250);
+	}
+}
+
+task quickBlock{
+	startTask(strafeRightToMiddle);
+	startTask(armDeploy);
+	driveForward(-190, 127, true, 0);
+	startTask(starThrow);
+	driveForward(-25, 127, true, 0); //Drive To Wall
+	delay(1000); // Catch our breath at wall
+	armPosition(440, 40, 4000);
+	delay(500);
+	while(true){
+		strafeAuto(80, 20);
+		delay(250);
+		strafeAuto(80, -20);
+		delay(250);
+	}
+}
+
+task doubleThrow{
+	startTask(strafeLeftStartToWall);
+	startTask(armDeploy);
+	driveForward(-190, 127, true, 0);
+	startTask(starThrow);
+	driveForward(-25, 127, true, 0); // Drive To Wall
+	delay(1000); // Catch our breath at wall
+	armPosition(440, 40, 3000);
+	startTask(strafeRightToMiddle);
+	driveForward(80, 127, true, 0);
+	armPosition(20, 40, 3000);
+	driveForward(70, 127, true, 0);
+	armPosition(120, 40, 3000);
+	driveForward(-120, 127, true, 0);
+	startTask(starThrow);
+	driveForward(-30, 127, true, 0);
+}
+
+task autoRobotGo {
+	int preLoadLoop = 0;
+
+	startTask(armDeploy);
+	driveForward(-190, 127, true, 0);
+	startTask(starThrow);
+	driveForward(-25, 127, true, 0); // Drive To Wall
+	delay(1000); // Catch our breath at wall
+	while(preLoadLoop < 5){
+		armPosition(300, 40, 3000);
+		driveForward(180, 127, true, 0);
+		delay(1500);
+		driveForward(-150, 127, true, 0);
+		startTask(starThrow);
+		driveForward(-30, 127, true, 0);
+		preLoadLoop = preLoadLoop + 1;
+		delay(1000);
+	}
+	driveForward(80, 127, true, 0);
+	strafeAuto(80, 130);
+	armPosition(20, 60, 3000);
+	driveForward(70, 127, true, 0);
+	armPosition(120, 60, 3000);
+	driveForward(-120, 127, true, 0);
+	startTask(starThrow);
+	driveForward(-30, 127, true, 0);
+	delay(1000);
+	armPosition(300, 40, 3000);
+	driveForward(70, 127, true, 0);
+}
+
+/*task autoRobotCubeThrowGo{
 	startTask(armDeploy);
 	driveForward(-190, 127, true, 0);
 	startTask(starThrow);
@@ -349,7 +446,7 @@ task autoRobotCubeThrowGo{
 	driveForward(-75, 127, true, 0); // Start Driving To Wall
 	startTask(starThrow); // Throw Cube
 	driveForward(-75, 127, true, 0); // At Wall
-}
+}*/
 
 task armPositionLow() {
 	armPosition(442, 80, 3000);
